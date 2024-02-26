@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- Node 1: bno055_i2c_node -->
+    <node ns="imu" name="imu_node" pkg="differential_drive" type="bno055_i2c_node" respawn="true" respawn_delay="2" output="screen">
+        <param name="device" type="string" value="/dev/i2c-7"/>
+        <param name="address" type="int" value="40"/> <!-- 0x28 == 40 is the default for BNO055 -->
+        <param name="frame_id" type="string" value="imu"/>
+    </node>
+
+    <!-- Node 2: twist_motors.py (run in a new terminal) -->
+    <node pkg="differential_drive" type="twist_motors.py" name="twist_to_motors" output="screen" launch-prefix="gnome-terminal -- bash -c 'sleep 2; $0 $@'">
+    </node>
+    	
+<node name="baselink2imu" pkg="tf" type="static_transform_publisher" args="0 0.0 0.15 0 0 0 base_link imu 100" />
+
+</launch>
